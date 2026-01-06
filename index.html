@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Projet tutoré — Glaciers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    html, body{
+      height:100%;
+      margin:0;
+      overflow:hidden;
+      background:#fff;
+    }
+
+    /* Header height (pour offset anchors) */
+    :root{
+      --header-h: 64px;
+    }
+
+    /* Scroll container */
+    #snap{
+      height:100vh;
+      overflow-y:auto;
+      scroll-snap-type:y mandatory;
+      scroll-behavior:smooth;
+      -webkit-overflow-scrolling:touch;
+      background:white;
+    }
+
+    /* Each section full screen + anchor offset */
+    section.snap-section{
+      height:100vh;
+      scroll-snap-align:start;
+      scroll-snap-stop:always;
+      position:relative;
+      overflow:hidden;
+      scroll-margin-top: var(--header-h);
+    }
+
+    /* Scroll inside section (sections can be long) */
+    .section-scroll{
+      height:100vh;
+      overflow-y:auto;
+      overscroll-behavior:contain;
+      padding: calc(var(--header-h) + 18px) 0 72px;
+    }
+
+    /* Fixed header */
+    header.topbar{
+      position:fixed;
+      top:0; left:0; right:0;
+      z-index:60;
+      height: var(--header-h);
+      display:flex;
+      align-items:center;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(226,232,240,0.9);
+    }
+
+    .navlink{
+      font-size:14px;
+      color:#334155;
+      padding:10px 12px;
+      border-radius:999px;
+      transition: background 160ms ease, color 160ms ease;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+    .navlink:hover{ background: rgba(2,132,199,0.08); color:#0f172a; }
+    .navlink.active{ color:#0284c7; background: rgba(2,132,199,0.12); font-weight:600; }
+
+    @media (max-width: 980px){
+      .nav-desktop{ display:none; }
+    }
+
+    .reveal{
+      opacity:0;
+      transform: translateY(14px);
+      transition: opacity 520ms ease, transform 520ms ease;
+      will-change: opacity, transform;
+    }
+    .reveal.active{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      #snap{ scroll-behavior:auto; }
+      .reveal{ opacity:1; transform:none; transition:none; }
+    }
+
+    .glass{
+      background: rgba(255,255,255,0.62);
+      border: 1px solid rgba(255,255,255,0.38);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 10px 40px rgba(15,23,42,0.10);
+    }
+
+    .cover-credit{
+      position:absolute;
+      left:0; right:0; bottom: 14px;
+      display:flex;
+      justify-content:center;
+      padding: 0 16px;
+      pointer-events:none;
+    }
+    .cover-credit > div{ pointer-events:auto; }
+
+    #lightbox.hidden{ display:none; }
+
+    :focus-visible{
+      outline: 3px solid rgba(2,132,199,0.35);
+      outline-offset: 3px;
+      border-radius: 14px;
+    }
+  </style>
+</head>
+
+<body class="text-slate-900">
+
+<header class="topbar">
+  <nav class="max-w-6xl mx-auto px-4 w-full flex items-center justify-between gap-3">
+    <a href="#cover" class="flex items-center gap-2 font-semibold no-underline">
+      <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-sky-600 text-white">❄️</span>
+      <span class="hidden sm:inline">Projet tutoré — Glaciers</span>
+      <span class="sm:hidden">Glaciers</span>
+    </a>
+
+    <div class="nav-desktop flex items-center gap-1">
+      <a class="navlink" href="#intro">Introduction</a>
+      <a class="navlink" href="#methodo">Méthodologie</a>
+      <a class="navlink" href="#resultats">Résultats</a>
+      <a class="navlink" href="#carte">Carte</a>
+      <a class="navlink" href="#exports">Exports</a>
+      <a class="navlink" href="#equipe">Équipe</a>
+    </div>
+  </nav>
+</header>
+
+<div id="snap">
+
+  <!-- COVER -->
+  <section id="cover" class="snap-section">
+    <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('assets/glacier.jpg');"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-950/20 via-sky-950/10 to-slate-950/30"></div>
+    <div class="absolute inset-0 shadow-[inset_0_0_220px_rgba(0,0,0,0.22)]"></div>
+
+    <div class="section-scroll">
+      <div class="max-w-6xl mx-auto px-6 h-[calc(100vh-164px)] flex items-center justify-center">
+        <div class="reveal glass rounded-[28px] p-8 md:p-12 w-full max-w-4xl text-center">
+          <div class="flex justify-center mb-6">
+            <img src="assets/logo-p8.png" alt="Université Paris 8" class="h-12 md:h-14 object-contain" />
+          </div>
+
+          <h1 class="text-4xl md:text-6xl font-semibold tracking-tight text-slate-950">
+            Projet tutoré — Glaciers
+          </h1>
+
+          <p class="mt-5 text-lg md:text-2xl text-slate-800 leading-relaxed">
+            Analyse de la sensibilité des glaciers face au changement climatique.
+          </p>
+
+          <div class="mt-10 flex flex-wrap justify-center gap-3">
+            <a href="#intro"
+               class="rounded-xl bg-sky-600 px-7 py-3 text-sm font-medium text-white hover:bg-sky-500 transition">
+              Commencer →
+            </a>
+            <a href="#methodo"
+               class="rounded-xl bg-white/80 border border-slate-200 px-7 py-3 text-sm font-medium hover:border-slate-300 transition">
+              Méthodologie →
+            </a>
+          </div>
+
+          <p class="mt-5 text-xs text-slate-700/80">
+            Navigation : scroll à l’intérieur des sections, puis “force” pour passer à la suivante.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-credit">
+      <div class="inline-flex flex-wrap gap-1 text-xs text-white bg-slate-950/35 backdrop-blur border border-white/20 rounded-full px-4 py-2">
+        <span>Photo :</span>
+        <span class="font-medium">Henrique Setim</span>
+        <span>—</span>
+        <a
+          href="https://unsplash.com/fr/photos/montagne-enneigee-pres-dun-plan-deau-XuD9vHw6yeY"
+          target="_blank"
+          rel="noreferrer"
+          class="underline hover:text-white/90"
+        >Unsplash (licence libre)</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section id="intro" class="snap-section bg-slate-50">
+    <div class="section-scroll">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="reveal">
+          <h2 class="text-4xl md:text-5xl font-semibold">Introduction</h2>
+
+          <p class="mt-5 max-w-5xl text-slate-700 text-lg leading-relaxed">
+            Les glaciers sont des indicateurs majeurs du changement climatique. Leur dynamique dépend de facteurs
+            morphologiques, topographiques et climatiques. À grande échelle, l’analyse de milliers de glaciers permet
+            d’identifier des tendances robustes et des contrastes régionaux.
+          </p>
+
+          <div class="mt-8 grid lg:grid-cols-2 gap-5">
+            <div class="rounded-[24px] bg-white border border-slate-200 p-6">
+              <h3 class="text-lg font-semibold text-sky-700">Origine des données</h3>
+              <p class="mt-3 text-slate-700 leading-relaxed">
+                Le projet s’appuie sur une base issue d’inventaires glaciaires, enrichie par des variables
+                descriptives et explicatives (morphologie, topographie, climat, dynamique) afin de construire
+                un indice comparable entre glaciers.
+              </p>
+            </div>
+
+            <div class="rounded-[24px] bg-white border border-slate-200 p-6">
+              <h3 class="text-lg font-semibold text-sky-700">Zone d’étude</h3>
+              <p class="mt-3 text-slate-700 leading-relaxed">
+                Trois régions ont été définies pour comparer des contextes contrastés :
+              </p>
+              <ul class="mt-3 list-disc pl-5 text-slate-700 space-y-1">
+                <li>Scandinavie</li>
+                <li>Europe de l’Ouest</li>
+                <li>Archipel Arctique</li>
+              </ul>
+              <p class="mt-3 text-slate-700">
+                Population analysée : <strong>11 816 glaciers</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-5 grid lg:grid-cols-2 gap-5">
+            <div class="rounded-[24px] bg-white border border-slate-200 p-6">
+              <h3 class="text-lg font-semibold text-sky-700">Définitions essentielles</h3>
+              <ul class="mt-3 text-slate-700 space-y-2 leading-relaxed">
+                <li><strong>Glacier</strong> : masse de glace persistante issue de l’accumulation de neige et s’écoulant sous l’effet de la gravité.</li>
+                <li><strong>Sensibilité</strong> : capacité d’un glacier à réagir aux variations (climat, bilan de masse) via des changements mesurables.</li>
+                <li><strong>ICS</strong> : indice composite combinant plusieurs variables (scores) pour comparer la sensibilité relative.</li>
+              </ul>
+            </div>
+
+            <div class="rounded-[24px] bg-white border border-slate-200 p-6">
+              <h3 class="text-lg font-semibold text-sky-700">Problématique</h3>
+              <p class="mt-3 text-slate-700 leading-relaxed">
+                Dans un contexte de changement climatique,
+                <strong>quelles caractéristiques expliquent le plus la sensibilité d’un glacier</strong>,
+                et comment cette sensibilité varie-t-elle selon les régions étudiées ?
+              </p>
+
+              <div class="mt-5">
+                <a href="#methodo"
+                   class="rounded-xl bg-sky-600 px-6 py-3 text-sm font-medium text-white hover:bg-sky-500 transition">
+                  Aller à la méthodologie →
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHODO -->
+  <section id="methodo" class="snap-section">
+    <div class="section-scroll">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="reveal">
+          <h2 class="text-4xl md:text-5xl font-semibold">Méthodologie</h2>
+
+          <p class="mt-5 max-w-5xl text-slate-700 text-lg leading-relaxed">
+            La démarche vise à construire un <strong>Indice Composite de Sensibilité (ICS)</strong> permettant de comparer
+            la vulnérabilité relative des glaciers à partir de variables <strong>morphologiques</strong>,
+            <strong>topographiques</strong>, <strong>climatiques</strong> et <strong>dynamiques</strong>.
+          </p>
+
+          <div class="mt-8 rounded-[28px] bg-slate-50 border border-slate-200 p-6">
+            <h3 class="text-lg font-semibold">Chaîne de traitement</h3>
+            <div class="mt-4 grid md:grid-cols-4 gap-4">
+              <div class="rounded-2xl bg-white border border-slate-200 p-5">
+                <div class="text-xs text-slate-500">Étape 1</div>
+                <div class="font-semibold text-sky-700">Structuration</div>
+                <div class="mt-1 text-sm text-slate-600">Harmonisation des champs</div>
+              </div>
+              <div class="rounded-2xl bg-white border border-slate-200 p-5">
+                <div class="text-xs text-slate-500">Étape 2</div>
+                <div class="font-semibold text-sky-700">Qualité</div>
+                <div class="mt-1 text-sm text-slate-600">Taux de renseignement</div>
+              </div>
+              <div class="rounded-2xl bg-white border border-slate-200 p-5">
+                <div class="text-xs text-slate-500">Étape 3</div>
+                <div class="font-semibold text-sky-700">Scoring</div>
+                <div class="mt-1 text-sm text-slate-600">Conversion en scores</div>
+              </div>
+              <div class="rounded-2xl bg-white border border-slate-200 p-5">
+                <div class="text-xs text-slate-500">Étape 4</div>
+                <div class="font-semibold text-sky-700">Agrégation</div>
+                <div class="mt-1 text-sm text-slate-600">Sous-scores → ICS + profils</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 grid lg:grid-cols-2 gap-5">
+            <div class="rounded-[24px] bg-white border border-slate-200 p-6">
+              <h3 class="text-lg font-semibold text-sky-700">Normalisation</h3>
+              <ul class="mt-3 list-disc pl-5 text-slate-700 space-y-2 leading-relaxed">
+                <li>Rendre comparables des variables de natures différentes (mètres, degrés, classes…)</li>
+                <li>Limiter la domination d’une variable dans l’indice</li>
+                <li>Contrôle des valeurs extrêmes / cohérence des distributions</li>
+              </ul>
+            </div>
+
+            <div class="rounded-[24px] bg-white border border-slate-200 p-6">
+              <h3 class="text-lg font-semibold text-sky-700">Familles de variables (profils)</h3>
+              <div class="mt-4 grid sm:grid-cols-2 gap-3">
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <div class="font-semibold text-sky-700">Morphologique</div>
+                  <div class="text-sm text-slate-600 mt-1">Forme / typologie</div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <div class="font-semibold text-sky-700">Topographique</div>
+                  <div class="text-sm text-slate-600 mt-1">Altitude / pente / exposition</div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <div class="font-semibold text-sky-700">Climatique</div>
+                  <div class="text-sm text-slate-600 mt-1">Indicateurs climatiques</div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <div class="font-semibold text-sky-700">Dynamique</div>
+                  <div class="text-sm text-slate-600 mt-1">Activité / dynamique</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-10">
+            <a href="#resultats"
+               class="rounded-xl bg-sky-600 px-6 py-3 text-sm font-medium text-white hover:bg-sky-500 transition">
+              Voir les résultats →
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTATS (NON VIDE) -->
+  <section id="resultats" class="snap-section bg-slate-50">
+    <div class="section-scroll">
+      <div class="max-w-6xl mx-auto px-6">
+        <!-- IMPORTANT: reveal ici, bien visible -->
+        <div class="reveal">
+          <h2 class="text-4xl md:text-5xl font-semibold">Résultats</h2>
+          <p class="mt-4 max-w-5xl text-slate-700 text-lg leading-relaxed">
+            Les résultats reposent sur l’Indice Composite de Sensibilité (ICS) et sur les profils (famille dominante)
+            permettant une interprétation plus fine.
+          </p>
+
+          <!-- Stats + Catégories -->
+          <div class="mt-8 grid lg:grid-cols-2 gap-5">
+            <div class="rounded-[24px] bg-white border border-slate-200 p-6">
+              <h3 class="text-lg font-semibold text-sky-700">Statistiques principales (ICS)</h3>
+              <div class="mt-4 grid sm:grid-cols-2 gap-3">
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <div class="text-xs text-slate-500">ICS moyen</div>
+                  <div class="mt-1 text-2xl font-semibold">6,05</div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <div class="text-xs text-slate-500">ICS médian</div>
+                  <div class="mt-1 text-2xl font-semibold">6</div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <div class="text-xs text-slate-500">ICS minimum</div>
+                  <div class="mt-1 text-2xl font-semibold">1</div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <div class="text-xs text-slate-500">ICS maximum</div>
+                  <div class="mt-1 text-2xl font-semibold">11</div>
+                </div>
+              </div>
+              <p class="mt-4 text-sm text-slate-600">
+                L’ICS est globalement centré autour de 6, avec quelques glaciers plus extrêmes (jusqu’à 11).
+              </p>
+            </div>
+
+            <div class="rounded-[24px] bg-white border border-slate-200 p-6">
+              <h3 class="text-lg font-semibold text-sky-700">Répartition par catégories</h3>
+              <div class="mt-4 overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="text-left text-slate-500 border-b border-slate-200">
+                      <th class="py-2 pr-4">Catégorie</th>
+                      <th class="py-2 pr-4">Nombre</th>
+                      <th class="py-2">%</th>
+                    </tr>
+                  </thead>
+                  <tbody class="align-top">
+                    <tr class="border-b border-slate-100">
+                      <td class="py-2 pr-4 font-medium">Peu sensible</td>
+                      <td class="py-2 pr-4">5 165</td>
+                      <td class="py-2">35,5 %</td>
+                    </tr>
+                    <tr class="border-b border-slate-100">
+                      <td class="py-2 pr-4 font-medium">Sensible</td>
+                      <td class="py-2 pr-4">3 497</td>
+                      <td class="py-2">24,0 %</td>
+                    </tr>
+                    <tr class="border-b border-slate-100">
+                      <td class="py-2 pr-4 font-medium">Non classé</td>
+                      <td class="py-2 pr-4">2 749</td>
+                      <td class="py-2">18,9 %</td>
+                    </tr>
+                    <tr class="border-b border-slate-100">
+                      <td class="py-2 pr-4 font-medium">Pas sensible</td>
+                      <td class="py-2 pr-4">351</td>
+                      <td class="py-2">2,4 %</td>
+                    </tr>
+                    <tr>
+                      <td class="py-2 pr-4 font-medium">Très sensible</td>
+                      <td class="py-2 pr-4">54</td>
+                      <td class="py-2">0,4 %</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <p class="mt-4 text-sm text-slate-600">
+                La catégorie <strong>Peu sensible</strong> domine ; les <strong>Très sensibles</strong> restent rares.
+              </p>
+            </div>
+          </div>
+
+          <!-- Images / analyse -->
+          <div class="mt-5 rounded-[24px] bg-white border border-slate-200 p-6">
+            <h3 class="text-lg font-semibold text-sky-700">Analyse spatiale & profils</h3>
+            <p class="mt-3 text-slate-700 leading-relaxed">
+              La carte et les profils complètent l’ICS en montrant la répartition spatiale et la famille dominante
+              expliquant la sensibilité (climatique / topographique / dynamique / morphologique).
+            </p>
+
+            <div class="mt-5 grid lg:grid-cols-2 gap-4">
+              <div class="rounded-2xl bg-slate-50 border border-slate-200 p-5">
+                <h4 class="font-semibold">Répartition des profils</h4>
+                <ul class="mt-3 text-sm text-slate-700 space-y-2">
+                  <li><strong>Climatique sensible</strong> : 5 463 (37,6%)</li>
+                  <li><strong>Topographique sensible</strong> : 5 424 (37,3%)</li>
+                  <li><strong>Dynamique sensible</strong> : 927 (6,4%)</li>
+                  <li><strong>Morphologique sensible</strong> : 2 (0,01%)</li>
+                </ul>
+              </div>
+
+              <div class="rounded-2xl bg-slate-50 border border-slate-200 p-5">
+                <h4 class="font-semibold">Conclusion</h4>
+                <ul class="mt-3 text-sm text-slate-700 list-disc pl-5 space-y-2">
+                  <li>Les glaciers très sensibles (ICS ≈ 10–11) sont surtout liés à des facteurs climatiques ou topographiques.</li>
+                  <li>Les glaciers les plus vulnérables sont souvent à faible altitude ou orientés défavorablement (exposition sud).</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mt-6">
+              <a href="#carte"
+                 class="rounded-xl bg-sky-600 px-6 py-3 text-sm font-medium text-white hover:bg-sky-500 transition">
+                Aller à la carte interactive →
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARTE -->
+  <section id="carte" class="snap-section">
+    <div class="section-scroll">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="reveal">
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+              <h2 class="text-4xl md:text-5xl font-semibold">Carte interactive & statistiques</h2>
+              <p class="mt-4 max-w-4xl text-slate-700 text-lg leading-relaxed">
+                Tableau de bord ArcGIS Experience Builder pour explorer l’ICS (filtres, profils, graphiques).
+              </p>
+            </div>
+
+            <a
+              href="https://experience.arcgis.com/experience/d13432ecbcbf4d57a2d65b8294884b65"
+              target="_blank"
+              rel="noreferrer"
+              class="inline-flex items-center justify-center rounded-xl bg-sky-600 px-5 py-3 text-sm font-medium text-white hover:bg-sky-500 transition"
+            >
+              Ouvrir en plein écran ↗
+            </a>
+          </div>
+
+          <div class="mt-6 rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
+            <div class="px-5 py-3 border-b border-slate-200 text-sm font-medium text-slate-800 flex items-center justify-between">
+              <span>Experience Builder — Glaciers ICS</span>
+              <span class="text-xs text-slate-500">Interactif</span>
+            </div>
+
+            <div class="h-[72vh]">
+              <iframe
+                src="https://experience.arcgis.com/experience/d13432ecbcbf4d57a2d65b8294884b65"
+                width="100%"
+                height="100%"
+                style="border:0;"
+                loading="lazy"
+                allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <a href="#exports" class="text-sky-700 underline hover:text-sky-900">
+              Voir les exports (cartes & graphiques) ↓
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPORTS -->
+  <section id="exports" class="snap-section bg-slate-50">
+    <div class="section-scroll">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="reveal">
+          <h2 class="text-4xl md:text-5xl font-semibold">Cartes & graphiques (exports)</h2>
+          <p class="mt-4 max-w-5xl text-slate-700 text-lg leading-relaxed">
+            Sorties fixes réutilisables (rapport, slides). Clique pour ouvrir en plein écran.
+          </p>
+
+          <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <button class="group text-left" onclick="openLightbox('assets/results/analyse_spatiale.png','Analyse spatiale de l’ICS')">
+              <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
+                <div class="aspect-[4/3] bg-slate-100 overflow-hidden">
+                  <img src="assets/results/graph_ICS.jpeg" alt="Analyse spatiale" class="w-full h-full object-cover group-hover:scale-[1.02] transition">
+                </div>
+                <div class="p-4">
+                  <div class="text-sm font-semibold">Analyse spatiale</div>
+                  <div class="text-xs text-slate-600 mt-1">Carte + graphique</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="group text-left" onclick="openLightbox('assets/results/profils_sensibilite.png','Profils de sensibilité')">
+              <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
+                <div class="aspect-[4/3] bg-slate-100 overflow-hidden">
+                  <img src="assets/results/profils_sensibilite.png" alt="Profils" class="w-full h-full object-cover group-hover:scale-[1.02] transition">
+                </div>
+                <div class="p-4">
+                  <div class="text-sm font-semibold">Profils</div>
+                  <div class="text-xs text-slate-600 mt-1">Famille dominante</div>
+                </div>
+              </div>
+            </button>
+
+            <div class="rounded-[28px] border border-dashed border-slate-300 bg-white p-6 flex items-center justify-center text-sm text-slate-600">
+              Ajoute ici tes autres exports
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EQUIPE -->
+  <section id="equipe" class="snap-section">
+    <div class="section-scroll">
+      <div class="max-w-6xl mx-auto px-6">
+        <div class="reveal">
+          <h2 class="text-4xl md:text-5xl font-semibold">Équipe</h2>
+          <p class="mt-4 max-w-5xl text-slate-700 text-lg leading-relaxed">
+            Contributions : préparation des données, construction de l’ICS, analyse cartographique/statistique, intégration web.
+          </p>
+
+          <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="rounded-[24px] bg-white border border-slate-200 p-6">
+              <div class="text-xs text-slate-500">Membre 1</div>
+              <div class="mt-2 text-lg font-semibold">El Hadj WADE</div>
+            </div>
+            <div class="rounded-[24px] bg-white border border-slate-200 p-6">
+              <div class="text-xs text-slate-500">Membre 2</div>
+              <div class="mt-2 text-lg font-semibold">Farida BOUANOU</div>
+            </div>
+            <div class="rounded-[24px] bg-white border border-slate-200 p-6">
+              <div class="text-xs text-slate-500">Membre 3</div>
+              <div class="mt-2 text-lg font-semibold">Dan RAYMOND</div>
+            </div>
+            <div class="rounded-[24px] bg-white border border-slate-200 p-6">
+              <div class="text-xs text-slate-500">Membre 4</div>
+              <div class="mt-2 text-lg font-semibold">Oumar Franck SURENA</div>
+            </div>
+          </div>
+
+          <div class="mt-8 text-sm text-slate-600">
+            <span class="font-medium">ArcGIS Experience Builder :</span>
+            <a class="underline text-sky-700 hover:text-sky-900"
+               href="https://experience.arcgis.com/experience/d13432ecbcbf4d57a2d65b8294884b65"
+               target="_blank" rel="noreferrer">
+              ouvrir ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" class="fixed inset-0 z-[999] hidden">
+  <div class="absolute inset-0 bg-black/60" onclick="closeLightbox()"></div>
+
+  <div class="relative max-w-6xl mx-auto px-4 h-full flex items-center justify-center">
+    <div class="w-full rounded-[28px] bg-white overflow-hidden shadow-xl border border-slate-200">
+      <div class="flex items-center justify-between px-5 py-3 border-b border-slate-200">
+        <div id="lightboxTitle" class="text-sm font-medium text-slate-800">Aperçu</div>
+        <div class="flex gap-3">
+          <button onclick="toggleFullscreen()" class="text-sm font-medium text-slate-600 hover:text-slate-900">
+            Plein écran ⤢
+          </button>
+          <button onclick="closeLightbox()" class="text-sm font-medium text-slate-600 hover:text-slate-900">
+            Fermer ✕
+          </button>
+        </div>
+      </div>
+      <div class="bg-slate-50">
+        <img id="lightboxImg" src="" alt="" class="w-full max-h-[85vh] object-contain">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const snap = document.getElementById("snap");
+  const navLinks = document.querySelectorAll(".navlink");
+  const sections = Array.from(document.querySelectorAll("section.snap-section"));
+  const reveals = document.querySelectorAll(".reveal");
+
+  // 1) Reveal animation
+  const ioReveal = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) e.target.classList.add("active");
+    });
+  }, { root: snap, threshold: 0.2 });
+
+  reveals.forEach(el => ioReveal.observe(el));
+
+  // 2) Active nav based on SECTION visibility (pas juste reveal)
+  const ioSection = new IntersectionObserver((entries) => {
+    const visible = entries.filter(e => e.isIntersecting);
+    if (!visible.length) return;
+
+    // prendre la section la plus visible
+    visible.sort((a,b) => b.intersectionRatio - a.intersectionRatio);
+    const id = visible[0].target.id;
+
+    navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + id));
+  }, { root: snap, threshold: [0.35, 0.55, 0.75] });
+
+  sections.forEach(sec => ioSection.observe(sec));
+
+  // 3) Force wheel between sections when internal scroll hits edge
+  const scrollAreas = document.querySelectorAll(".section-scroll");
+
+  function findSectionIndex(el){
+    const sec = el.closest("section.snap-section");
+    return sections.indexOf(sec);
+  }
+  function scrollToSection(idx){
+    if (idx < 0 || idx >= sections.length) return;
+    sections[idx].scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  scrollAreas.forEach(area => {
+    area.addEventListener("wheel", (e) => {
+      const delta = e.deltaY;
+      const atTop = area.scrollTop <= 0;
+      const atBottom = (area.scrollTop + area.clientHeight) >= (area.scrollHeight - 1);
+
+      if (delta > 10 && atBottom) scrollToSection(findSectionIndex(area) + 1);
+      if (delta < -10 && atTop) scrollToSection(findSectionIndex(area) - 1);
+    }, { passive: true });
+  });
+
+  // 4) Lightbox
+  function openLightbox(src, title) {
+    const lb = document.getElementById('lightbox');
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightboxTitle').textContent = title;
+    lb.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    const lb = document.getElementById('lightbox');
+    lb.classList.add('hidden');
+    document.body.style.overflow = '';
+    if (document.fullscreenElement) document.exitFullscreen();
+  }
+  function toggleFullscreen() {
+    const lb = document.getElementById('lightbox');
+    if (!document.fullscreenElement) lb.requestFullscreen().catch(() => {});
+    else document.exitFullscreen();
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
+
+</body>
+</html>
