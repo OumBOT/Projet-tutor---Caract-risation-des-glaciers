@@ -6,6 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- ✅ AJOUT (Leaflet OpenSource) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    defer
+  ></script>
+  <!-- ✅ FIN AJOUT -->
+
   <style>
     html, body{
       height:100%;
@@ -111,6 +122,10 @@
       outline-offset: 3px;
       border-radius: 14px;
     }
+
+    /* ✅ AJOUT (Leaflet container) */
+    #leafletMap { width: 100%; height: 100%; }
+    /* ✅ FIN AJOUT */
   </style>
 </head>
 
@@ -172,7 +187,7 @@
           </div>
 
           <p class="mt-5 text-xs text-slate-700/80">
-            Navigation : scroll à l’intérieur des sections, puis “force” pour passer à la suivante.
+            Navigation : scroll à l’intérieur des sections.
           </p>
         </div>
       </div>
@@ -502,23 +517,58 @@
             </a>
           </div>
 
-          <div class="mt-6 rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
-            <div class="px-5 py-3 border-b border-slate-200 text-sm font-medium text-slate-800 flex items-center justify-between">
-              <span>Experience Builder — Glaciers ICS</span>
-              <span class="text-xs text-slate-500">Interactif</span>
+          <!-- ✅ AJOUT: wrapper 2 colonnes (garde ton iframe intact, on ajoute juste à côté) -->
+          <div class="mt-6 grid lg:grid-cols-2 gap-4">
+
+            <!-- (TON BLOC EXISTANT) -->
+            <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
+              <div class="px-5 py-3 border-b border-slate-200 text-sm font-medium text-slate-800 flex items-center justify-between">
+                <span>Experience Builder — Glaciers ICS</span>
+                <span class="text-xs text-slate-500">Interactif</span>
+              </div>
+
+              <div class="h-[72vh]">
+                <iframe
+                  src="https://experience.arcgis.com/experience/d13432ecbcbf4d57a2d65b8294884b65"
+                  width="100%"
+                  height="100%"
+                  style="border:0;"
+                  loading="lazy"
+                  allowfullscreen>
+                </iframe>
+              </div>
             </div>
 
-            <div class="h-[72vh]">
-              <iframe
-                src="https://experience.arcgis.com/experience/d13432ecbcbf4d57a2d65b8294884b65"
-                width="100%"
-                height="100%"
-                style="border:0;"
-                loading="lazy"
-                allowfullscreen>
-              </iframe>
+            <!-- ✅ AJOUT: bloc Leaflet OpenSource à côté -->
+            <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
+              <div class="px-5 py-3 border-b border-slate-200 text-sm font-medium text-slate-800 flex items-center justify-between">
+                <span id="mapTitle">Carte open-source — Profil : Climatique</span>
+                <div class="flex items-center gap-3">
+                  <span class="text-xs text-slate-500">Leaflet + OpenStreetMap</span>
+                  <button onclick="toggleLeafletFullscreen()" class="text-sm font-medium text-slate-600 hover:text-slate-900">
+                    Plein écran ⤢
+                  </button>
+                </div>
+              </div>
+
+              <div class="px-5 py-3 border-b border-slate-200 flex flex-wrap gap-2">
+                <button class="rounded-xl bg-slate-900 text-white px-3 py-2 text-xs font-medium hover:bg-slate-800 transition"
+                        data-profile="climatique">Climatique</button>
+                <button class="rounded-xl bg-slate-900 text-white px-3 py-2 text-xs font-medium hover:bg-slate-800 transition"
+                        data-profile="topographique">Topographique</button>
+                <button class="rounded-xl bg-slate-900 text-white px-3 py-2 text-xs font-medium hover:bg-slate-800 transition"
+                        data-profile="dynamique">Dynamique</button>
+                <button class="rounded-xl bg-slate-900 text-white px-3 py-2 text-xs font-medium hover:bg-slate-800 transition"
+                        data-profile="morphologique">Morphologique</button>
+              </div>
+
+              <div id="leafletWrap" class="h-[72vh]">
+                <div id="leafletMap" class="h-full w-full"></div>
+              </div>
             </div>
+
           </div>
+          <!-- ✅ FIN AJOUT -->
 
           <div class="mt-6">
             <a href="#exports" class="text-sky-700 underline hover:text-sky-900">
@@ -770,6 +820,99 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeLightbox();
   });
+
+  /* ==========================================================
+     ✅ AJOUT — CARTES INTERACTIVES OPEN-SOURCE (Leaflet)
+     ========================================================== */
+  let leafletMap;
+  let currentGeoLayer = null;
+
+  const profileConfig = {
+  climatique:    { file: "Assets/data/Climatique.geojson",    title: "Climatique",    color: "#1f78b4" },
+  topographique: { file: "Assets/data/Topographique.geojson", title: "Topographique", color: "#ff7f00" },
+  dynamique:     { file: "Assets/data/Dynamique.geojson",     title: "Dynamique",     color: "#6a3d9a" },
+  morphologique: { file: "Assets/data/Morphologique.geojson", title: "Morphologique", color: "#33a02c" },
+};
+
+  function initLeafletSideMap() {
+    const mapDiv = document.getElementById("leafletMap");
+    if (!mapDiv) return;
+
+    leafletMap = L.map("leafletMap", { zoomControl: true }).setView([55, 10], 3);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+      maxZoom: 18,
+    }).addTo(leafletMap);
+
+    document.querySelectorAll('button[data-profile]').forEach(btn => {
+      btn.addEventListener("click", () => loadProfile(btn.dataset.profile));
+    });
+
+    loadProfile("climatique");
+
+    setTimeout(() => leafletMap.invalidateSize(), 250);
+  }
+
+  function loadProfile(key) {
+    const cfg = profileConfig[key];
+    if (!cfg || !leafletMap) return;
+
+    const titleEl = document.getElementById("mapTitle");
+    if (titleEl) titleEl.textContent = `Carte open-source — Profil : ${cfg.title}`;
+
+    if (currentGeoLayer) {
+      leafletMap.removeLayer(currentGeoLayer);
+      currentGeoLayer = null;
+    }
+
+    fetch(cfg.file)
+      .then(r => {
+        if (!r.ok) throw new Error("GeoJSON introuvable : " + cfg.file);
+        return r.json();
+      })
+      .then(geojson => {
+        currentGeoLayer = L.geoJSON(geojson, {
+          style: { color: cfg.color, weight: 1, fillOpacity: 0.75 },
+          onEachFeature: (feature, layer) => {
+            const p = feature.properties || {};
+            const html = `
+              <div style="font-size:13px; line-height:1.35">
+                <div><b>Profil</b> : ${p.profil_sensi ?? cfg.title}</div>
+                ${p.ICS !== undefined ? `<div><b>ICS</b> : ${p.ICS}</div>` : ""}
+              </div>
+            `;
+            layer.bindPopup(html);
+          }
+        }).addTo(leafletMap);
+
+        const b = currentGeoLayer.getBounds();
+        if (b.isValid()) leafletMap.fitBounds(b, { padding: [20, 20] });
+
+        setTimeout(() => leafletMap.invalidateSize(), 150);
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Erreur de chargement : " + cfg.file);
+      });
+  }
+
+  function toggleLeafletFullscreen() {
+    const wrap = document.getElementById("leafletWrap");
+    if (!wrap) return;
+
+    if (!document.fullscreenElement) {
+      wrap.requestFullscreen().then(() => {
+        setTimeout(() => leafletMap && leafletMap.invalidateSize(), 200);
+      }).catch(() => {});
+    } else {
+      document.exitFullscreen();
+      setTimeout(() => leafletMap && leafletMap.invalidateSize(), 200);
+    }
+  }
+
+  window.addEventListener("load", initLeafletSideMap);
+  /* ======================== FIN AJOUT ======================== */
 </script>
 
 </body>
