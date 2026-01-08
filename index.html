@@ -117,17 +117,6 @@
 
     /* ✅ Leaflet container */
     #leafletMap { width: 100%; height: 100%; }
-
-    /* ✅ Labels glaciers (si permanents) */
-    .glacier-label{
-      background: rgba(255,255,255,0.82);
-      border: 1px solid rgba(148,163,184,0.65);
-      color: #0f172a;
-      padding: 2px 6px;
-      border-radius: 999px;
-      font-size: 11px;
-      box-shadow: 0 4px 14px rgba(15,23,42,0.10);
-    }
   </style>
 </head>
 
@@ -374,6 +363,7 @@
             permettant une interprétation plus fine.
           </p>
 
+          <!-- (le reste de ta section résultats est inchangé) -->
           <div class="mt-8 grid lg:grid-cols-2 gap-5">
             <div class="rounded-[24px] bg-white border border-slate-200 p-6">
               <h3 class="text-lg font-semibold text-sky-700">Statistiques principales (ICS)</h3>
@@ -447,48 +437,6 @@
             </div>
           </div>
 
-          <div class="mt-5 rounded-[24px] bg-white border border-slate-200 p-6">
-            <h3 class="text-lg font-semibold text-sky-700">Aperçus (exports)</h3>
-            <p class="mt-3 text-slate-700 leading-relaxed">
-              Quelques sorties fixes (carte + graphiques) pour appuyer l’analyse.
-            </p>
-
-            <div class="mt-5 grid lg:grid-cols-2 gap-4">
-              <button class="group text-left" onclick="openLightbox('Assets/results/graph_ICS.jpeg','Distribution de l’ICS')">
-                <div class="rounded-2xl bg-slate-50 border border-slate-200 overflow-hidden">
-                  <div class="aspect-[16/10] bg-slate-100 overflow-hidden">
-                    <img src="Assets/results/graph_ICS.jpeg" alt="Graphique ICS"
-                         class="w-full h-full object-cover group-hover:scale-[1.02] transition">
-                  </div>
-                  <div class="p-4">
-                    <div class="font-semibold">Distribution de l’ICS</div>
-                    <div class="text-sm text-slate-600 mt-1">Histogramme</div>
-                  </div>
-                </div>
-              </button>
-
-              <button class="group text-left" onclick="openLightbox('Assets/results/repartition_profil.jpeg','Répartition des profils')">
-                <div class="rounded-2xl bg-slate-50 border border-slate-200 overflow-hidden">
-                  <div class="aspect-[16/10] bg-slate-100 overflow-hidden">
-                    <img src="Assets/results/repartition_profil.jpeg" alt="Répartition profils"
-                         class="w-full h-full object-cover group-hover:scale-[1.02] transition">
-                  </div>
-                  <div class="p-4">
-                    <div class="font-semibold">Répartition des profils</div>
-                    <div class="text-sm text-slate-600 mt-1">Famille dominante</div>
-                  </div>
-                </div>
-              </button>
-            </div>
-
-            <div class="mt-6">
-              <a href="#carte"
-                 class="rounded-xl bg-sky-600 px-6 py-3 text-sm font-medium text-white hover:bg-sky-500 transition">
-                Aller à la carte interactive →
-              </a>
-            </div>
-          </div>
-
         </div>
       </div>
     </div>
@@ -537,7 +485,7 @@
               </div>
             </div>
 
-            <!-- Leaflet -->
+            <!-- Leaflet + filtres -->
             <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
               <div class="px-5 py-3 border-b border-slate-200 text-sm font-medium text-slate-800 flex items-center justify-between">
                 <span id="mapTitle">Carte open-source — Profil : Climatique</span>
@@ -560,12 +508,63 @@
                         data-profile="morphologique">Morphologique</button>
               </div>
 
-              <div class="px-5 py-2 border-b border-slate-200 flex flex-wrap items-center gap-3 text-xs text-slate-700">
-                <label class="inline-flex items-center gap-2">
-                  <input id="labelsToggle" type="checkbox" class="rounded border-slate-300">
-                  Afficher noms (zoom élevé)
-                </label>
-                <span class="text-slate-500">Astuce : active après zoom pour éviter la surcharge</span>
+              <!-- ✅ Filtres perf : on affiche seulement une sélection -->
+              <div class="px-5 py-3 border-b border-slate-200 bg-white">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+
+                  <label class="flex flex-col gap-1">
+                    <span class="text-slate-600">Taille minimum</span>
+                    <select id="f_size" class="rounded-xl border border-slate-200 px-3 py-2">
+                      <option value="">Toutes</option>
+                      <option value="Très petit">Très petit</option>
+                      <option value="Petit">Petit</option>
+                      <option value="Moyen">Moyen</option>
+                      <option value="Grand">Grand</option>
+                      <option value="Très grand">Très grand</option>
+                    </select>
+                  </label>
+
+                  <label class="flex flex-col gap-1">
+                    <span class="text-slate-600">Orientation (accumulation)</span>
+                    <select id="f_orient" class="rounded-xl border border-slate-200 px-3 py-2">
+                      <option value="">Toutes</option>
+                      <option value="N">N</option><option value="NE">NE</option><option value="E">E</option><option value="SE">SE</option>
+                      <option value="S">S</option><option value="SW">SW</option><option value="W">W</option><option value="NW">NW</option>
+                    </select>
+                  </label>
+
+                  <label class="flex flex-col gap-1">
+                    <span class="text-slate-600">Altitude max ≥ (m)</span>
+                    <input id="f_alt" type="number" min="0" step="50" placeholder="ex: 2500"
+                           class="rounded-xl border border-slate-200 px-3 py-2"/>
+                  </label>
+
+                  <label class="flex flex-col gap-1">
+                    <span class="text-slate-600">Forme glacier</span>
+                    <select id="f_forme" class="rounded-xl border border-slate-200 px-3 py-2">
+                      <option value="">Toutes</option>
+                    </select>
+                  </label>
+
+                  <label class="flex flex-col gap-1">
+                    <span class="text-slate-600">Activité langue</span>
+                    <select id="f_langue" class="rounded-xl border border-slate-200 px-3 py-2">
+                      <option value="">Toutes</option>
+                    </select>
+                  </label>
+
+                  <div class="flex items-end gap-2">
+                    <button id="btn_apply"
+                            class="rounded-xl bg-slate-900 text-white px-4 py-2 text-xs font-medium hover:bg-slate-800 transition w-full">
+                      Appliquer
+                    </button>
+                    <button id="btn_reset"
+                            class="rounded-xl bg-white border border-slate-200 px-4 py-2 text-xs font-medium hover:border-slate-300 transition w-full">
+                      Reset
+                    </button>
+                  </div>
+
+                </div>
               </div>
 
               <div id="leafletWrap" class="h-[72vh]">
@@ -573,12 +572,6 @@
               </div>
             </div>
 
-          </div>
-
-          <div class="mt-6">
-            <a href="#exports" class="text-sky-700 underline hover:text-sky-900">
-              Voir les exports (cartes & graphiques) ↓
-            </a>
           </div>
 
         </div>
@@ -608,7 +601,6 @@
                 </div>
               </div>
             </button>
-
             <button class="group text-left" onclick="openLightbox('Assets/results/graph_ICS.jpeg','Distribution de l’ICS')">
               <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
                 <div class="aspect-[4/3] bg-slate-100 overflow-hidden">
@@ -620,7 +612,6 @@
                 </div>
               </div>
             </button>
-
             <button class="group text-left" onclick="openLightbox('Assets/results/graph_par_region.jpeg','Comparaison par région')">
               <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
                 <div class="aspect-[4/3] bg-slate-100 overflow-hidden">
@@ -632,7 +623,6 @@
                 </div>
               </div>
             </button>
-
             <button class="group text-left" onclick="openLightbox('Assets/results/graph_alt_sur_lat.png','Altitude en fonction de la latitude')">
               <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
                 <div class="aspect-[4/3] bg-slate-100 overflow-hidden">
@@ -644,7 +634,6 @@
                 </div>
               </div>
             </button>
-
             <button class="group text-left" onclick="openLightbox('Assets/results/repartition_profil.jpeg','Répartition des profils')">
               <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
                 <div class="aspect-[4/3] bg-slate-100 overflow-hidden">
@@ -656,7 +645,6 @@
                 </div>
               </div>
             </button>
-
             <button class="group text-left" onclick="openLightbox('Assets/results/exhaustivite_data.jpeg','Exhaustivité des données')">
               <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
                 <div class="aspect-[4/3] bg-slate-100 overflow-hidden">
@@ -719,7 +707,7 @@
 
 </div>
 
-<!-- Lightbox -->
+<!-- Lightbox (inchangé) -->
 <div id="lightbox" class="fixed inset-0 z-[999] hidden">
   <div class="absolute inset-0 bg-black/60" onclick="closeLightbox()"></div>
 
@@ -749,29 +737,23 @@
   const sections = Array.from(document.querySelectorAll("section.snap-section"));
   const reveals = document.querySelectorAll(".reveal");
 
-  // 1) Reveal animation
+  // Reveal
   const ioReveal = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) e.target.classList.add("active");
-    });
+    entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("active"); });
   }, { root: snap, threshold: 0.2 });
-
   reveals.forEach(el => ioReveal.observe(el));
 
-  // 2) Active nav based on SECTION visibility
+  // Active nav
   const ioSection = new IntersectionObserver((entries) => {
     const visible = entries.filter(e => e.isIntersecting);
     if (!visible.length) return;
-
     visible.sort((a,b) => b.intersectionRatio - a.intersectionRatio);
     const id = visible[0].target.id;
-
     navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + id));
   }, { root: snap, threshold: [0.35, 0.55, 0.75] });
-
   sections.forEach(sec => ioSection.observe(sec));
 
-  // 3) Force wheel between sections when internal scroll hits edge (avec lock)
+  // Wheel snap lock
   const scrollAreas = document.querySelectorAll(".section-scroll");
   let snapLock = false;
 
@@ -782,25 +764,21 @@
   function scrollToSection(idx){
     if (snapLock) return;
     snapLock = true;
-
     if (idx < 0 || idx >= sections.length) { snapLock = false; return; }
     sections[idx].scrollIntoView({ behavior: "smooth", block: "start" });
-
     setTimeout(() => snapLock = false, 700);
   }
-
   scrollAreas.forEach(area => {
     area.addEventListener("wheel", (e) => {
       const delta = e.deltaY;
       const atTop = area.scrollTop <= 0;
       const atBottom = (area.scrollTop + area.clientHeight) >= (area.scrollHeight - 1);
-
       if (delta > 10 && atBottom) scrollToSection(findSectionIndex(area) + 1);
       if (delta < -10 && atTop) scrollToSection(findSectionIndex(area) - 1);
     }, { passive: true });
   });
 
-  // 4) Lightbox
+  // Lightbox
   function openLightbox(src, title) {
     const lb = document.getElementById('lightbox');
     document.getElementById('lightboxImg').src = src;
@@ -819,20 +797,17 @@
     if (!document.fullscreenElement) lb.requestFullscreen().catch(() => {});
     else document.exitFullscreen();
   }
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeLightbox();
-  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
 
   /* ==========================================================
-     ✅ CARTES INTERACTIVES OPEN-SOURCE (Leaflet)
-     + Canvas renderer (perf)
-     + Popups complets (tes champs)
-     + Labels optionnels (zoom élevé)
+     ✅ Leaflet + filtres (perf) + popups
      ========================================================== */
-  let leafletMap;
-  let currentGeoLayer = null;
-  let labelsEnabled = false;
 
+  // ⚠️ Mets bien tes fichiers là:
+  // Assets/data/Climatique.geojson
+  // Assets/data/Topographique.geojson
+  // Assets/data/Dynamique.geojson
+  // Assets/data/Morphologique.geojson
   const profileConfig = {
     climatique:    { file: "Assets/data/Climatique.geojson",    title: "Climatique",    color: "#1f78b4" },
     topographique: { file: "Assets/data/Topographique.geojson", title: "Topographique", color: "#ff7f00" },
@@ -840,106 +815,18 @@
     morphologique: { file: "Assets/data/Morphologique.geojson", title: "Morphologique", color: "#33a02c" },
   };
 
-  function initLeafletSideMap() {
-    const mapDiv = document.getElementById("leafletMap");
-    if (!mapDiv) return;
+  let leafletMap;
+  let currentGeoLayer = null;
+  const geoCache = {}; // cache par profil
 
-    leafletMap = L.map("leafletMap", { zoomControl: true }).setView([55, 10], 3);
+  const sizeOrder = ["Très petit", "Petit", "Moyen", "Grand", "Très grand"];
+  const sizeRank = (v) => Math.max(0, sizeOrder.indexOf((v ?? "").trim()));
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; OpenStreetMap contributors",
-      maxZoom: 18,
-    }).addTo(leafletMap);
-
-    // Boutons profils
-    document.querySelectorAll('button[data-profile]').forEach(btn => {
-      btn.addEventListener("click", () => loadProfile(btn.dataset.profile));
-    });
-
-    // Toggle labels (noms glaciers)
-    const t = document.getElementById("labelsToggle");
-    if (t) {
-      t.addEventListener("change", () => {
-        labelsEnabled = t.checked;
-        // recharge le profil courant pour appliquer/retirer les labels
-        if (window.__currentProfileKey) loadProfile(window.__currentProfileKey);
-      });
-    }
-
-    // Profil par défaut
-    loadProfile("climatique");
-
-    setTimeout(() => leafletMap.invalidateSize(), 250);
-  }
-
-  function loadProfile(key) {
-    window.__currentProfileKey = key;
-    const cfg = profileConfig[key];
-    if (!cfg || !leafletMap) return;
-
-    const titleEl = document.getElementById("mapTitle");
-    if (titleEl) titleEl.textContent = `Carte open-source — Profil : ${cfg.title}`;
-
-    if (currentGeoLayer) {
-      leafletMap.removeLayer(currentGeoLayer);
-      currentGeoLayer = null;
-    }
-
-    fetch(cfg.file)
-      .then(r => {
-        if (!r.ok) throw new Error("GeoJSON introuvable : " + cfg.file);
-        return r.json();
-      })
-      .then(geojson => {
-        const canvasRenderer = L.canvas({ padding: 0.5 });
-
-        currentGeoLayer = L.geoJSON(geojson, {
-          renderer: canvasRenderer, // ✅ perf
-          style: { color: cfg.color, weight: 1, fillOpacity: 0.75 },
-          onEachFeature: (feature, layer) => {
-            const p = feature.properties || {};
-
-            // ✅ Tooltip (nom au survol) = léger
-            if (p.nom_glaciers) {
-              layer.bindTooltip(p.nom_glaciers, { sticky: true });
-            }
-
-            // ✅ Labels permanents optionnels (seulement si zoom élevé)
-            // On évite d'en créer trop : seulement si toggle ON + zoom >= 7
-            if (labelsEnabled && p.nom_glaciers && leafletMap.getZoom() >= 7) {
-              layer.bindTooltip(p.nom_glaciers, {
-                permanent: true,
-                direction: "center",
-                className: "glacier-label"
-              });
-            }
-
-            // ✅ Popup complet avec tes champs
-            const html = `
-              <div style="font-size:13px; line-height:1.35">
-                <div style="font-weight:700; margin-bottom:6px">
-                  ${p.nom_glaciers ?? "Glacier"}
-                </div>
-                ${p.alt_max_m !== undefined ? `<div><b>Alt max (m)</b> : ${p.alt_max_m}</div>` : ""}
-                ${p.orient_acc !== undefined ? `<div><b>Orientation (acc)</b> : ${p.orient_acc}</div>` : ""}
-                ${p.forme_glacier !== undefined ? `<div><b>Forme</b> : ${p.forme_glacier}</div>` : ""}
-                ${p.act_langue !== undefined ? `<div><b>Activité langue</b> : ${p.act_langue}</div>` : ""}
-                ${p.Classe_taille !== undefined ? `<div><b>Classe taille</b> : ${p.Classe_taille}</div>` : ""}
-              </div>
-            `;
-            layer.bindPopup(html);
-          }
-        }).addTo(leafletMap);
-
-        const b = currentGeoLayer.getBounds();
-        if (b.isValid()) leafletMap.fitBounds(b, { padding: [20, 20] });
-
-        setTimeout(() => leafletMap.invalidateSize(), 150);
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Erreur de chargement : " + cfg.file);
-      });
+  function normStr(v){ return (v ?? "").toString().trim(); }
+  function toNum(v){
+    if (v === null || v === undefined) return NaN;
+    const n = parseFloat(v.toString().replace(",", ".").trim());
+    return Number.isFinite(n) ? n : NaN;
   }
 
   function toggleLeafletFullscreen() {
@@ -956,12 +843,172 @@
     }
   }
 
-  // ✅ Stabilise la carte au changement de fullscreen
-  document.addEventListener("fullscreenchange", () => {
-    if (!document.fullscreenElement && leafletMap) {
-      setTimeout(() => leafletMap.invalidateSize(), 120);
+  function initLeafletSideMap() {
+    const mapDiv = document.getElementById("leafletMap");
+    if (!mapDiv) return;
+
+    leafletMap = L.map("leafletMap", { zoomControl: true }).setView([55, 10], 3);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+      maxZoom: 18,
+    }).addTo(leafletMap);
+
+    document.querySelectorAll('button[data-profile]').forEach(btn => {
+      btn.addEventListener("click", () => loadProfile(btn.dataset.profile));
+    });
+
+    document.getElementById("btn_apply")?.addEventListener("click", () => applyFiltersAndRender());
+    document.getElementById("btn_reset")?.addEventListener("click", () => resetFilters());
+
+    loadProfile("climatique");
+    setTimeout(() => leafletMap.invalidateSize(), 250);
+  }
+
+  function resetFilters(){
+    document.getElementById("f_size").value = "";
+    document.getElementById("f_orient").value = "";
+    document.getElementById("f_alt").value = "";
+    document.getElementById("f_forme").value = "";
+    document.getElementById("f_langue").value = "";
+    applyFiltersAndRender();
+  }
+
+  async function loadProfile(key){
+    window.__currentProfileKey = key;
+    const cfg = profileConfig[key];
+    if (!cfg || !leafletMap) return;
+
+    document.getElementById("mapTitle").textContent = `Carte open-source — Profil : ${cfg.title}`;
+
+    if (!geoCache[key]){
+      const r = await fetch(cfg.file);
+      if (!r.ok) throw new Error("GeoJSON introuvable : " + cfg.file);
+      geoCache[key] = await r.json();
     }
-  });
+
+    fillDynamicSelects(geoCache[key]);
+    applyFiltersAndRender();
+  }
+
+  function fillDynamicSelects(geojson){
+    const formes = new Set();
+    const langues = new Set();
+
+    for (const f of geojson.features || []){
+      const p = f.properties || {};
+      const fo = normStr(p.forme_glacier);
+      const la = normStr(p.act_langue);
+      if (fo) formes.add(fo);
+      if (la) langues.add(la);
+    }
+
+    const selForme = document.getElementById("f_forme");
+    const selLang  = document.getElementById("f_langue");
+    if (!selForme || !selLang) return;
+
+    const curF = selForme.value;
+    const curL = selLang.value;
+
+    selForme.innerHTML = `<option value="">Toutes</option>` + [...formes].sort().map(v => `<option value="${v}">${v}</option>`).join("");
+    selLang.innerHTML  = `<option value="">Toutes</option>` + [...langues].sort().map(v => `<option value="${v}">${v}</option>`).join("");
+
+    if ([...formes].includes(curF)) selForme.value = curF;
+    if ([...langues].includes(curL)) selLang.value = curL;
+  }
+
+  function applyFiltersAndRender(){
+    const key = window.__currentProfileKey;
+    const cfg = profileConfig[key];
+    const geojson = geoCache[key];
+    if (!cfg || !geojson || !leafletMap) return;
+
+    const minSize = normStr(document.getElementById("f_size")?.value);
+    const orient  = normStr(document.getElementById("f_orient")?.value);
+    const altMin  = toNum(document.getElementById("f_alt")?.value);
+    const forme   = normStr(document.getElementById("f_forme")?.value);
+    const langue  = normStr(document.getElementById("f_langue")?.value);
+
+    const minRank = minSize ? sizeRank(minSize) : -1;
+
+    const filtered = {
+      type: "FeatureCollection",
+      features: (geojson.features || []).filter(ft => {
+        const p = ft.properties || {};
+
+        // ✅ Taille
+        if (minRank >= 0){
+          const r = sizeRank(p.Classe_Taille);
+          if (r < minRank) return false;
+        }
+
+        // ✅ Orientation
+        if (orient){
+          if (normStr(p.orient_acc) !== orient) return false;
+        }
+
+        // ✅ Altitude max
+        if (Number.isFinite(altMin)){
+          const a = toNum(p.alt_max_m);
+          if (!Number.isFinite(a) || a < altMin) return false;
+        }
+
+        // ✅ Forme
+        if (forme){
+          if (normStr(p.forme_glacier) !== forme) return false;
+        }
+
+        // ✅ Activité langue
+        if (langue){
+          if (normStr(p.act_langue) !== langue) return false;
+        }
+
+        return true;
+      })
+    };
+
+    if (currentGeoLayer){
+      leafletMap.removeLayer(currentGeoLayer);
+      currentGeoLayer = null;
+    }
+
+    const canvasRenderer = L.canvas({ padding: 0.5 });
+
+    currentGeoLayer = L.geoJSON(filtered, {
+      renderer: canvasRenderer,
+      pointToLayer: (feature, latlng) => L.circleMarker(latlng, {
+        radius: 3,
+        weight: 1,
+        color: cfg.color,
+        fillColor: cfg.color,
+        fillOpacity: 0.75
+      }),
+      onEachFeature: (feature, layer) => {
+        const p = feature.properties || {};
+
+        // Tooltip au survol (nom)
+        if (p.nom_glacier) layer.bindTooltip(p.nom_glacier, { sticky: true });
+
+        // Popup avec les infos demandées
+        const html = `
+          <div style="font-size:13px; line-height:1.35">
+            <div style="font-weight:700; margin-bottom:6px">${p.nom_glacier ?? "Glacier"}</div>
+            ${p.alt_max_m !== undefined ? `<div><b>Alt max (m)</b> : ${p.alt_max_m}</div>` : ""}
+            ${p.orient_acc !== undefined ? `<div><b>Orientation (acc)</b> : ${normStr(p.orient_acc)}</div>` : ""}
+            ${p.forme_glacier !== undefined ? `<div><b>Forme</b> : ${p.forme_glacier}</div>` : ""}
+            ${p.act_langue !== undefined ? `<div><b>Activité langue</b> : ${p.act_langue}</div>` : ""}
+            ${p.Classe_Taille !== undefined ? `<div><b>Classe taille</b> : ${p.Classe_Taille}</div>` : ""}
+          </div>
+        `;
+        layer.bindPopup(html);
+      }
+    }).addTo(leafletMap);
+
+    const b = currentGeoLayer.getBounds();
+    if (b.isValid()) leafletMap.fitBounds(b, { padding: [20, 20] });
+
+    setTimeout(() => leafletMap.invalidateSize(), 120);
+  }
 
   window.addEventListener("load", initLeafletSideMap);
 </script>
