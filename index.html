@@ -18,7 +18,9 @@
       background:#fff;
     }
 
-    :root{ --header-h: 64px; }
+    :root{
+      --header-h: 64px;
+    }
 
     #snap{
       height:100vh;
@@ -36,7 +38,7 @@
       position:relative;
       overflow:hidden;
       scroll-margin-top: var(--header-h);
-      background:#fff; /* ✅ évite flash noir */
+      background:#fff; /* évite flash noir */
     }
 
     .section-scroll{
@@ -115,7 +117,7 @@
       border-radius: 14px;
     }
 
-    /* ✅ Leaflet container */
+    /* Leaflet container */
     #leafletMap { width: 100%; height: 100%; }
   </style>
 </head>
@@ -352,7 +354,7 @@
     </div>
   </section>
 
-  <!-- RESULTATS (inchangé / ton contenu reste comme avant dans ton fichier, je laisse ici minimal) -->
+  <!-- RESULTATS -->
   <section id="resultats" class="snap-section bg-slate-50">
     <div class="section-scroll">
       <div class="max-w-6xl mx-auto px-6">
@@ -363,11 +365,119 @@
             permettant une interprétation plus fine.
           </p>
 
-          <div class="mt-6">
-            <a href="#carte"
-               class="rounded-xl bg-sky-600 px-6 py-3 text-sm font-medium text-white hover:bg-sky-500 transition inline-flex">
-              Aller à la carte interactive →
-            </a>
+          <div class="mt-8 grid lg:grid-cols-2 gap-5">
+            <div class="rounded-[24px] bg-white border border-slate-200 p-6">
+              <h3 class="text-lg font-semibold text-sky-700">Statistiques principales (ICS)</h3>
+              <div class="mt-4 grid sm:grid-cols-2 gap-3">
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <div class="text-xs text-slate-500">ICS moyen</div>
+                  <div class="mt-1 text-2xl font-semibold">6,05</div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <div class="text-xs text-slate-500">ICS médian</div>
+                  <div class="mt-1 text-2xl font-semibold">6</div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <div class="text-xs text-slate-500">ICS minimum</div>
+                  <div class="mt-1 text-2xl font-semibold">1</div>
+                </div>
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-4">
+                  <div class="text-xs text-slate-500">ICS maximum</div>
+                  <div class="mt-1 text-2xl font-semibold">11</div>
+                </div>
+              </div>
+              <p class="mt-4 text-sm text-slate-600">
+                L’ICS est globalement centré autour de 6, avec quelques glaciers plus extrêmes (jusqu’à 11).
+              </p>
+            </div>
+
+            <div class="rounded-[24px] bg-white border border-slate-200 p-6">
+              <h3 class="text-lg font-semibold text-sky-700">Répartition par catégories</h3>
+              <div class="mt-4 overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead>
+                    <tr class="text-left text-slate-500 border-b border-slate-200">
+                      <th class="py-2 pr-4">Catégorie</th>
+                      <th class="py-2 pr-4">Nombre</th>
+                      <th class="py-2">%</th>
+                    </tr>
+                  </thead>
+                  <tbody class="align-top">
+                    <tr class="border-b border-slate-100">
+                      <td class="py-2 pr-4 font-medium">Peu sensible</td>
+                      <td class="py-2 pr-4">5 165</td>
+                      <td class="py-2">35,5 %</td>
+                    </tr>
+                    <tr class="border-b border-slate-100">
+                      <td class="py-2 pr-4 font-medium">Sensible</td>
+                      <td class="py-2 pr-4">3 497</td>
+                      <td class="py-2">24,0 %</td>
+                    </tr>
+                    <tr class="border-b border-slate-100">
+                      <td class="py-2 pr-4 font-medium">Non classé</td>
+                      <td class="py-2 pr-4">2 749</td>
+                      <td class="py-2">18,9 %</td>
+                    </tr>
+                    <tr class="border-b border-slate-100">
+                      <td class="py-2 pr-4 font-medium">Pas sensible</td>
+                      <td class="py-2 pr-4">351</td>
+                      <td class="py-2">2,4 %</td>
+                    </tr>
+                    <tr>
+                      <td class="py-2 pr-4 font-medium">Très sensible</td>
+                      <td class="py-2 pr-4">54</td>
+                      <td class="py-2">0,4 %</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <p class="mt-4 text-sm text-slate-600">
+                La catégorie <strong>Peu sensible</strong> domine ; les <strong>Très sensibles</strong> restent rares.
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-5 rounded-[24px] bg-white border border-slate-200 p-6">
+            <h3 class="text-lg font-semibold text-sky-700">Aperçus (exports)</h3>
+            <p class="mt-3 text-slate-700 leading-relaxed">
+              Quelques sorties fixes (carte + graphiques) pour appuyer l’analyse.
+            </p>
+
+            <div class="mt-5 grid lg:grid-cols-2 gap-4">
+              <button class="group text-left" onclick="openLightbox('Assets/results/graph_ICS.jpeg','Distribution de l’ICS')">
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 overflow-hidden">
+                  <div class="aspect-[16/10] bg-slate-100 overflow-hidden">
+                    <img src="Assets/results/graph_ICS.jpeg" alt="Graphique ICS"
+                         class="w-full h-full object-cover group-hover:scale-[1.02] transition">
+                  </div>
+                  <div class="p-4">
+                    <div class="font-semibold">Distribution de l’ICS</div>
+                    <div class="text-sm text-slate-600 mt-1">Histogramme</div>
+                  </div>
+                </div>
+              </button>
+
+              <button class="group text-left" onclick="openLightbox('Assets/results/repartition_profil.jpeg','Répartition des profils')">
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 overflow-hidden">
+                  <div class="aspect-[16/10] bg-slate-100 overflow-hidden">
+                    <img src="Assets/results/repartition_profil.jpeg" alt="Répartition profils"
+                         class="w-full h-full object-cover group-hover:scale-[1.02] transition">
+                  </div>
+                  <div class="p-4">
+                    <div class="font-semibold">Répartition des profils</div>
+                    <div class="text-sm text-slate-600 mt-1">Famille dominante</div>
+                  </div>
+                </div>
+              </button>
+            </div>
+
+            <div class="mt-6">
+              <a href="#carte"
+                 class="rounded-xl bg-sky-600 px-6 py-3 text-sm font-medium text-white hover:bg-sky-500 transition">
+                Aller aux cartes interactives →
+              </a>
+            </div>
           </div>
 
         </div>
@@ -375,7 +485,7 @@
     </div>
   </section>
 
-  <!-- CARTE (✅ plus côte à côte : onglets) -->
+  <!-- CARTE -->
   <section id="carte" class="snap-section">
     <div class="section-scroll">
       <div class="max-w-6xl mx-auto px-6">
@@ -384,8 +494,8 @@
             <div>
               <h2 class="text-4xl md:text-5xl font-semibold">Cartes interactives</h2>
               <p class="mt-4 max-w-4xl text-slate-700 text-lg leading-relaxed">
-                Deux options : (1) Experience Builder, (2) carte open-source Leaflet (sans compte).  
-                Pour la lisibilité et la performance, la carte open-source affiche un <strong>nombre limité de points</strong> selon les filtres.
+                Deux options : (1) Experience Builder, (2) carte open-source Leaflet (sans compte).
+                Pour la lisibilité et la performance, la carte open-source limite l’affichage à <strong>1000 points</strong> maximum.
               </p>
             </div>
           </div>
@@ -412,15 +522,23 @@
             </a>
           </div>
 
-          <!-- Contenu ArcGIS -->
+          <!-- ArcGIS -->
           <div id="panelArcGIS" class="mt-4 rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
             <div class="px-5 py-3 border-b border-slate-200 text-sm font-medium text-slate-800 flex items-center justify-between">
               <span>Experience Builder — Glaciers ICS</span>
-              <span class="text-xs text-slate-500">Interactif</span>
+              <div class="flex items-center gap-3">
+                <span class="text-xs text-slate-500">Interactif</span>
+                <button id="btnReloadArc"
+                        class="text-sm font-medium text-slate-600 hover:text-slate-900">
+                  Recharger ↻
+                </button>
+              </div>
             </div>
 
             <div class="h-[72vh]">
               <iframe
+                id="arcIframe"
+                data-src="https://experience.arcgis.com/experience/d13432ecbcbf4d57a2d65b8294884b65"
                 src="https://experience.arcgis.com/experience/d13432ecbcbf4d57a2d65b8294884b65"
                 width="100%"
                 height="100%"
@@ -431,7 +549,7 @@
             </div>
           </div>
 
-          <!-- Contenu OpenSource -->
+          <!-- Open-source -->
           <div id="panelOSM" class="mt-4 rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm hidden">
             <div class="px-5 py-3 border-b border-slate-200 text-sm font-medium text-slate-800 flex items-center justify-between">
               <span id="mapTitle">Carte open-source — Profil : Climatique</span>
@@ -455,7 +573,7 @@
                       data-profile="morphologique">Morphologique</button>
             </div>
 
-            <!-- Filtres + limite -->
+            <!-- Filtres -->
             <div class="px-5 py-3 border-b border-slate-200 bg-white">
               <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
 
@@ -500,17 +618,6 @@
                   </select>
                 </label>
 
-                <label class="flex flex-col gap-1">
-                  <span class="text-slate-600">Nombre max de points</span>
-                  <select id="f_limit" class="rounded-xl border border-slate-200 px-3 py-2">
-                    <option value="500">500</option>
-                    <option value="1000">1000</option>
-                    <option value="2000" selected>2000</option>
-                    <option value="4000">4000</option>
-                    <option value="8000">8000</option>
-                  </select>
-                </label>
-
                 <label class="col-span-2 md:col-span-1 flex items-center gap-2 mt-2">
                   <input id="f_inview" type="checkbox" class="rounded border-slate-300">
                   <span class="text-slate-700">Limiter à la vue (emprise actuelle)</span>
@@ -528,9 +635,7 @@
                 </div>
               </div>
 
-              <p id="limitInfo" class="mt-3 text-xs text-slate-600">
-                —
-              </p>
+              <p id="limitInfo" class="mt-3 text-xs text-slate-600">—</p>
             </div>
 
             <div id="leafletWrap" class="h-[72vh]">
@@ -538,12 +643,18 @@
             </div>
           </div>
 
+          <div class="mt-6">
+            <a href="#exports" class="text-sky-700 underline hover:text-sky-900">
+              Voir les exports (cartes & graphiques) ↓
+            </a>
+          </div>
+
         </div>
       </div>
     </div>
   </section>
 
-  <!-- EXPORTS (inchangé) -->
+  <!-- EXPORTS -->
   <section id="exports" class="snap-section bg-slate-50">
     <div class="section-scroll">
       <div class="max-w-6xl mx-auto px-6">
@@ -554,6 +665,7 @@
           </p>
 
           <div class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
             <button class="group text-left" onclick="openLightbox('Assets/results/carte_ICS.jpeg','Carte de l’ICS')">
               <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
                 <div class="aspect-[4/3] bg-slate-100 overflow-hidden">
@@ -565,14 +677,75 @@
                 </div>
               </div>
             </button>
-            <!-- (garde tes autres boutons d’exports ici) -->
+
+            <button class="group text-left" onclick="openLightbox('Assets/results/graph_ICS.jpeg','Distribution de l’ICS')">
+              <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
+                <div class="aspect-[4/3] bg-slate-100 overflow-hidden">
+                  <img src="Assets/results/graph_ICS.jpeg" alt="Graphique ICS" class="w-full h-full object-cover group-hover:scale-[1.02] transition">
+                </div>
+                <div class="p-4">
+                  <div class="text-sm font-semibold">Distribution ICS</div>
+                  <div class="text-xs text-slate-600 mt-1">Histogramme</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="group text-left" onclick="openLightbox('Assets/results/graph_par_region.jpeg','Comparaison par région')">
+              <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
+                <div class="aspect-[4/3] bg-slate-100 overflow-hidden">
+                  <img src="Assets/results/graph_par_region.jpeg" alt="Graphique par région" class="w-full h-full object-cover group-hover:scale-[1.02] transition">
+                </div>
+                <div class="p-4">
+                  <div class="text-sm font-semibold">Comparaison par région</div>
+                  <div class="text-xs text-slate-600 mt-1">Scandinavie / Europe Ouest / Arctique</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="group text-left" onclick="openLightbox('Assets/results/graph_alt_sur_lat.png','Altitude en fonction de la latitude')">
+              <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
+                <div class="aspect-[4/3] bg-slate-100 overflow-hidden">
+                  <img src="Assets/results/graph_alt_sur_lat.png" alt="Altitude sur latitude" class="w-full h-full object-cover group-hover:scale-[1.02] transition">
+                </div>
+                <div class="p-4">
+                  <div class="text-sm font-semibold">Altitude / latitude</div>
+                  <div class="text-xs text-slate-600 mt-1">Relation spatiale</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="group text-left" onclick="openLightbox('Assets/results/repartition_profil.jpeg','Répartition des profils')">
+              <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
+                <div class="aspect-[4/3] bg-slate-100 overflow-hidden">
+                  <img src="Assets/results/repartition_profil.jpeg" alt="Répartition des profils" class="w-full h-full object-cover group-hover:scale-[1.02] transition">
+                </div>
+                <div class="p-4">
+                  <div class="text-sm font-semibold">Profils dominants</div>
+                  <div class="text-xs text-slate-600 mt-1">Famille explicative dominante</div>
+                </div>
+              </div>
+            </button>
+
+            <button class="group text-left" onclick="openLightbox('Assets/results/exhaustivite_data.jpeg','Exhaustivité des données')">
+              <div class="rounded-[28px] overflow-hidden border border-slate-200 bg-white shadow-sm">
+                <div class="aspect-[4/3] bg-slate-100 overflow-hidden">
+                  <img src="Assets/results/exhaustivite_data.jpeg" alt="Exhaustivité des données" class="w-full h-full object-cover group-hover:scale-[1.02] transition">
+                </div>
+                <div class="p-4">
+                  <div class="text-sm font-semibold">Exhaustivité</div>
+                  <div class="text-xs text-slate-600 mt-1">Taux de renseignement</div>
+                </div>
+              </div>
+            </button>
+
           </div>
+
         </div>
       </div>
     </div>
   </section>
 
-  <!-- EQUIPE (inchangé) -->
+  <!-- EQUIPE -->
   <section id="equipe" class="snap-section">
     <div class="section-scroll">
       <div class="max-w-6xl mx-auto px-6">
@@ -616,7 +789,7 @@
 
 </div>
 
-<!-- Lightbox (inchangé) -->
+<!-- Lightbox -->
 <div id="lightbox" class="fixed inset-0 z-[999] hidden">
   <div class="absolute inset-0 bg-black/60" onclick="closeLightbox()"></div>
 
@@ -662,7 +835,7 @@
   }, { root: snap, threshold: [0.35, 0.55, 0.75] });
   sections.forEach(sec => ioSection.observe(sec));
 
-  // Wheel snap lock
+  // Wheel snap lock (plus doux)
   const scrollAreas = document.querySelectorAll(".section-scroll");
   let snapLock = false;
 
@@ -709,13 +882,22 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
 
   /* ==========================================================
-     ✅ Onglets (ArcGIS / OpenSource)
+     Onglets (ArcGIS / OpenSource) + Fix iframe “vide”
      ========================================================== */
   const tabArcGIS = document.getElementById("tabArcGIS");
   const tabOSM = document.getElementById("tabOSM");
   const panelArcGIS = document.getElementById("panelArcGIS");
   const panelOSM = document.getElementById("panelOSM");
   const btnArcFull = document.getElementById("btnArcFull");
+  const arcIframe = document.getElementById("arcIframe");
+  const btnReloadArc = document.getElementById("btnReloadArc");
+
+  function reloadArcIframe(){
+    if (!arcIframe) return;
+    const src = arcIframe.getAttribute("data-src") || arcIframe.src;
+    arcIframe.src = "";           // reset
+    arcIframe.src = src;          // reload
+  }
 
   function setTab(which){
     const isArc = which === "arc";
@@ -732,7 +914,14 @@
 
     btnArcFull.style.display = isArc ? "inline-flex" : "none";
 
-    // Si on ouvre Leaflet, on force un redraw
+    // Si on revient sur l'iframe et qu'il est "vide", un reload résout souvent le souci
+    if (isArc){
+      setTimeout(() => {
+        // refresh soft
+        try { arcIframe && (arcIframe.src = arcIframe.src); } catch(e){}
+      }, 150);
+    }
+
     if (!isArc && leafletMap){
       setTimeout(() => leafletMap.invalidateSize(), 250);
     }
@@ -740,11 +929,11 @@
 
   tabArcGIS?.addEventListener("click", () => setTab("arc"));
   tabOSM?.addEventListener("click", () => setTab("osm"));
+  btnReloadArc?.addEventListener("click", () => reloadArcIframe());
 
   /* ==========================================================
-     ✅ Leaflet + filtres + limite points (lisibilité + perf)
+     Leaflet + filtres + limite fixe 1000 points
      ========================================================== */
-
   const profileConfig = {
     climatique:    { file: "Assets/data/Climatique.geojson",    title: "Climatique",    color: "#1f78b4" },
     topographique: { file: "Assets/data/Topographique.geojson", title: "Topographique", color: "#ff7f00" },
@@ -752,11 +941,12 @@
     morphologique: { file: "Assets/data/Morphologique.geojson", title: "Morphologique", color: "#33a02c" },
   };
 
+  const FIXED_LIMIT = 1000;
+
   let leafletMap;
   let currentGeoLayer = null;
   const geoCache = {}; // cache par profil
 
-  // Ordre taille (pour filtrer/tri)
   const sizeOrder = ["Très petit", "Petit", "Moyen", "Grand", "Très grand"];
   const sizeRank = (v) => {
     const idx = sizeOrder.indexOf((v ?? "").toString().trim());
@@ -795,24 +985,19 @@
       maxZoom: 18,
     }).addTo(leafletMap);
 
-    // Profils
     document.querySelectorAll('button[data-profile]').forEach(btn => {
       btn.addEventListener("click", () => loadProfile(btn.dataset.profile));
     });
 
-    // Filtres
     document.getElementById("btn_apply")?.addEventListener("click", () => applyFiltersAndRender(true));
     document.getElementById("btn_reset")?.addEventListener("click", () => resetFilters());
 
-    // Limiter à la vue: re-render au moveend si checké
     leafletMap.on("moveend", () => {
       const inview = document.getElementById("f_inview")?.checked;
       if (inview) applyFiltersAndRender(false);
     });
 
-    // Default
     loadProfile("climatique");
-
     setTimeout(() => leafletMap.invalidateSize(), 250);
   }
 
@@ -822,7 +1007,6 @@
     document.getElementById("f_alt").value = "";
     document.getElementById("f_forme").value = "";
     document.getElementById("f_langue").value = "";
-    document.getElementById("f_limit").value = "2000";
     document.getElementById("f_inview").checked = false;
     applyFiltersAndRender(true);
   }
@@ -884,7 +1068,6 @@
     const altMin  = toNum(document.getElementById("f_alt")?.value);
     const forme   = normStr(document.getElementById("f_forme")?.value);
     const langue  = normStr(document.getElementById("f_langue")?.value);
-    const limit   = parseInt(document.getElementById("f_limit")?.value || "2000", 10);
     const inview  = !!document.getElementById("f_inview")?.checked;
 
     const minRank = minSize ? sizeRank(minSize) : -1;
@@ -894,34 +1077,28 @@
     let feats = (geojson.features || []).filter(ft => {
       const p = ft.properties || {};
 
-      // Taille
       if (minRank >= 0){
         const r = sizeRank(p.Classe_Taille);
         if (r === -1 || r < minRank) return false;
       }
 
-      // Orientation
       if (orient){
         if (normStr(p.orient_acc) !== orient) return false;
       }
 
-      // Altitude max
       if (Number.isFinite(altMin)){
         const a = toNum(p.alt_max_m);
         if (!Number.isFinite(a) || a < altMin) return false;
       }
 
-      // Forme
       if (forme){
         if (normStr(p.forme_glacier) !== forme) return false;
       }
 
-      // Activité langue
       if (langue){
         if (normStr(p.act_langue) !== langue) return false;
       }
 
-      // Limiter à la vue (bbox)
       if (viewBounds){
         const coords = ft.geometry?.coordinates;
         if (!coords || coords.length < 2) return false;
@@ -934,9 +1111,8 @@
 
     const totalAfterFilter = feats.length;
 
-    // 2) Limite points (lisibilité + perf)
-    // Stratégie: on garde d'abord les + grands, puis alt_max_m plus élevé.
-    if (feats.length > limit){
+    // 2) Limite fixe 1000 : on garde d'abord les + grands, puis alt_max_m élevé
+    if (feats.length > FIXED_LIMIT){
       feats.sort((a, b) => {
         const pa = a.properties || {};
         const pb = b.properties || {};
@@ -951,18 +1127,16 @@
         const nb = Number.isFinite(ab) ? ab : -Infinity;
         return nb - na;
       });
-
-      feats = feats.slice(0, limit);
+      feats = feats.slice(0, FIXED_LIMIT);
     }
 
     const shown = feats.length;
 
-    // Info texte
     const info = document.getElementById("limitInfo");
     if (info){
       info.innerHTML = `
         Résultats après filtres : <strong>${totalAfterFilter.toLocaleString()}</strong> glaciers.
-        Affichage : <strong>${shown.toLocaleString()}</strong> point(s) (limite = ${limit}).
+        Affichage : <strong>${shown.toLocaleString()}</strong> point(s) (limite fixe = ${FIXED_LIMIT}).
         <span class="text-slate-500">Pour plus de détails : zoome + active “Limiter à la vue”.</span>
       `;
     }
@@ -991,7 +1165,7 @@
         // Tooltip (nom)
         if (p.nom_glacier) layer.bindTooltip(p.nom_glacier, { sticky: true });
 
-        // Popup avec tes champs
+        // Popup (tes champs)
         const html = `
           <div style="font-size:13px; line-height:1.35">
             <div style="font-weight:700; margin-bottom:6px">${p.nom_glacier ?? "Glacier"}</div>
@@ -1006,7 +1180,6 @@
       }
     }).addTo(leafletMap);
 
-    // 4) Fit bounds (option)
     if (fit){
       const b = currentGeoLayer.getBounds();
       if (b.isValid()) leafletMap.fitBounds(b, { padding: [20, 20] });
@@ -1016,7 +1189,6 @@
   }
 
   window.addEventListener("load", () => {
-    // Tab default: ArcGIS (tu peux mettre "osm" si tu préfères)
     setTab("arc");
     initLeaflet();
   });
